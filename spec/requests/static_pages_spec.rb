@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe "StaticPages" do
 
-  let(:base_title) { "Ruby on Rails Tutorial Sample App" }
-
   subject { page }
 
   describe "Home page" do
@@ -11,7 +9,7 @@ describe "StaticPages" do
     before { visit root_path }
 
     it { should have_selector('h1', :text => 'Sample App') }
-    it { should have_selector('title', :text => "#{base_title}") }
+    it { should have_selector('title', :text => full_title('')) }
     it { should_not have_selector('title', :text => '| Home') }
   end
 
@@ -19,7 +17,7 @@ describe "StaticPages" do
 
     before { visit help_path }
     it { should have_selector('h1', :text => 'Help') }
-    it { should have_selector('title', :content => full_title('Help')) }
+    it { should have_selector('title', :text => full_title('Help')) }
   end
 
   describe "About page" do
@@ -27,7 +25,7 @@ describe "StaticPages" do
     before { visit about_path }
 
     it { should have_selector('h1', :text => 'About Us') }
-    it { should have_selector('title', :content => full_title('Help')) }
+    it { should have_selector('title', :text => full_title('About Us')) }
   end
 
   describe "Contact page" do
@@ -35,6 +33,19 @@ describe "StaticPages" do
     before { visit contact_path }
     
     it { should have_selector('h1', :text => 'Contact') }
-    it { should have_selector('title', :content =>full_title('Help')) }
+    it { should have_selector('title', :text =>full_title('Contact')) }
+  end
+
+  it "should have the right links on the layout" do
+    visit root_path
+    click_link "About"
+    expect(page).to have_selector('title', :text => full_title('About'))
+    click_link "Help"
+    expect(page).to have_selector('title', :text => full_title('Help'))
+    click_link "Home"
+    click_link "Sign up now!"
+    expect(page).to have_selector('title', :text => full_title('Sign up'))
+    click_link "sample app"
+    expect(page).to have_selector('title', :text => full_title(''))
   end
 end
